@@ -133,6 +133,17 @@ erl -noshell -pa ebin -name client_node@127.0.0.1 -s client
 </section>
 
 <section class="slide">
+  <h2>EPMD names</h2>
+  <p>epmd - portmapper in erlang world, uses simple protocol over TCP</p>
+  <p>Both client and server tell epmd about their names and ports</p>
+  <p>Client asks server's port by name</p>
+</section>
+
+<section class="slide">
+  <h2>Connection handshake</h2>
+</section>
+
+<section class="slide">
   <h2>Don't drink too much Kool-Aid</h2>
   <ul>
     <li>fully connected mesh (N^2 connections)</li>

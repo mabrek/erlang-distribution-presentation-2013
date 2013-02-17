@@ -119,6 +119,20 @@ erl -noshell -pa ebin -name client_node@127.0.0.1 -s client
 </section>
 
 <section class="slide">
+  <h2>Tools</h2>
+  <ul>
+    <li><code>cd otp/; CFLAGS="-D ERTS_DIST_MSG_DBG" make</code></li>
+    <li>tcpdump or wireshark</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <h2>Watching output</h2>
+  <ul>
+  <img src="img/tcpdump.gif"/>
+</section>
+
+<section class="slide">
   <h2>Don't drink too much Kool-Aid</h2>
   <ul>
     <li>fully connected mesh (N^2 connections)</li>
@@ -128,6 +142,7 @@ erl -noshell -pa ebin -name client_node@127.0.0.1 -s client
     <li>no security</li>
     <li>single tcp connection between 2 nodes</li>
     <li>don't even try to use over WAN (I did)</li>
+    <li>epmd could forget node or not delete dead node (rare but painful)</li>
   </ul>
 </section>
 
@@ -135,7 +150,8 @@ erl -noshell -pa ebin -name client_node@127.0.0.1 -s client
   <h2>Links</h2>
   <ul>
     <li><a href="http://learnyousomeerlang.com/distribunomicon">LYSE:Distribunomicon</a></li>
-    <li><a href="http://www.erlang.org/doc/apps/erts/erl_dist_protocol.html">Distribution Protocol Documentation</a>
+    <li><a href="http://www.erlang.org/doc/apps/erts/erl_dist_protocol.html">Distribution Protocol Documentation</a></li>
+    <li>Image credits: <a href="http://devopsreactions.tumblr.com/">devopsreactions.tumblr.com</a></li>
   </ul>
 </section>
 

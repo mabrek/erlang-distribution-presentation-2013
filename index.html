@@ -36,11 +36,116 @@
 </section>
 
 <section class="slide">
+  <h2>Show me the Code: Server</h2>
+  <pre>
+-module(server).
+-behaviour(gen_server).
+...
+start() ->
+    gen_server:start_link({local, server_quux}, ?MODULE, [], []).
+...
+handle_call("hello", _From, State) ->
+    {reply, "world", State}.
+...
+  </pre>
+</section>
+
+<section class="slide">
+  <h2>Show me the Code: Server (full)</h2>
+  <p>for those looking for hidden AbstractSingletonFactoryImplementation</p>
+  <pre>
+-module(server).
+
+-behaviour(gen_server).
+
+-export([start/0]).
+
+-export([init/1, handle_call/3, handle_cast/2, handle_info/2,
+         terminate/2, code_change/3]).
+
+-record(state, {}).
+
+start() ->
+    gen_server:start_link({local, server_quux}, ?MODULE, [], []).
+
+init([]) ->
+    {ok, #state{}}.
+
+handle_call("hello", _From, State) ->
+    {reply, "world", State}.
+
+handle_cast(_Msg, State) ->
+    {noreply, State}.
+
+handle_info(_Info, State) ->
+    {noreply, State}.
+
+terminate(_Reason, _State) ->
+    ok.
+
+code_change(_OldVsn, State, _Extra) ->
+    {ok, State}.
+  </pre>
+</section>
+
+<section class="slide">
+  <h2>Show me the Code: Client</h2>
+  <pre>
+-module(client).
+
+-export([start/0]).
+
+start() ->
+    Reply = gen_server:call(
+              {server_quux, 'server_node@127.0.0.1'},
+              "hello"),
+    io:format("reply is ~p~n", [Reply]),
+    timer:sleep(30000),
+    erlang:halt().
+  </pre>
+  <p>Yes, it's that short.</p>
+</section>
+
+<section class="slide">
+  <h2>Show me the Code: Command Line</h2>
+  <pre>
+erlc -o ebin/ src/*.erl
+
+erl -noshell -pa ebin -name server_node@127.0.0.1 -s server
+
+erl -noshell -pa ebin -name client_node@127.0.0.1 -s client
+
+  </pre>
+</section>
+
+<section class="slide">
+  <h2>Don't drink too much Kool-Aid</h2>
+  <ul>
+    <li>fully connected mesh (N^2 connections)</li>
+    <li>nodes won't reconnect automatically</li>
+    <li>global names won't resync</li>
+    <li>large messages are harmful</li>
+    <li>no security</li>
+    <li>single tcp connection between 2 nodes</li>
+    <li>don't even try to use over WAN (I did)</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <h2>Links</h2>
+  <ul>
+    <li><a href="http://learnyousomeerlang.com/distribunomicon">LYSE:Distribunomicon</a></li>
+    <li><a href="http://www.erlang.org/doc/apps/erts/erl_dist_protocol.html">Distribution Protocol Documentation</a>
+  </ul>
+</section>
+
+<section class="slide">
     <h2>Q&amp;A</h2>
     <p>Anton Lebedevich</p>
     <p>mabrek@gmail.com</p>
     <p><a target="_blank" href="https://github.com/mabrek">github.com/mabrek</a></p>
-    <p>These slides: <a href="http://mabrek.github.com/redis-presentation-2012/">http://mabrek.github.com/erlang-distribution-presentation-2013/</a></p>
+    <p><a href="http://mabrek.github.com/erlang-distribution-presentation-2013/">http://mabrek.github.com/erlang-distribution-presentation-2013/</a></p>
+    <p><a href="http://github.com/erlang-distribution-presentation-2013/">Code, logs, traces</a></p>
 </section>
 
 <!-- End slides. -->

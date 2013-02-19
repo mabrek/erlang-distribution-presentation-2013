@@ -121,26 +121,50 @@ erl -noshell -pa ebin -name client_node@127.0.0.1 -s client
 <section class="slide">
   <h2>Tools</h2>
   <ul>
-    <li><code>cd otp/; CFLAGS="-D ERTS_DIST_MSG_DBG" make</code></li>
-    <li>tcpdump or wireshark</li>
+    <li>turn on distribution debugging at compile time by<br/>
+      <code>cd otp/; CFLAGS="-D ERTS_DIST_MSG_DBG" make</code></li>
+    <li>tcpdump or wireshark (has decoder for the protocol)</li>
   </ul>
 </section>
 
 <section class="slide">
-  <h2>Watching output</h2>
+  <h2>Watching the output</h2>
   <ul>
   <img src="img/tcpdump.gif"/>
 </section>
 
 <section class="slide">
   <h2>EPMD names</h2>
-  <p>epmd - portmapper in erlang world, uses simple protocol over TCP</p>
-  <p>Both client and server tell epmd about their names and ports</p>
-  <p>Client asks server's port by name</p>
+  <p>epmd - portmapper in erlang world, uses simple protocol over TCP.</p>
+  <p>Both client and server tell epmd about their names, ports, protocol versions.</p>
+  <p>Client asks server's port by name.</p>
+  <p>epmd gives it to the client (with protocol version).</p>
 </section>
 
 <section class="slide">
   <h2>Connection handshake</h2>
+  <h3>Client <span style="float: right">Server</span></h3>
+  <p style="clear: both">tcp connect &rarr; <span style="float: right">&larr; tcp accept</span></p>
+  <p style="clear: both">send name &rarr;</p>
+  <p style="clear: both">&nbsp; <span style="float: right">&larr; send status</span></p>
+  <p style="clear: both">&nbsp; <span style="float: right">&larr; send challenge</span></p>
+  <p style="clear: both">send challenge reply &rarr;</p>
+  <p style="clear: both">&nbsp; <span style="float: right">&larr; send challenge ack</span></p>
+</section>
+
+<section class="slide">
+  <h2>RPC</h2>
+  <h3>Client <span style="float: right">Server</span></h3>
+  <p style="clear: both">monitor server process<br/>
+    CTL: {19,&lt;0.2.0&gt;,server_quux,#Ref&lt;0.0.0.40&gt;} &rarr;</p>
+  <p style="clear: both">send message to process by registered name<br/>
+    CTL: {6,&lt;0.2.0&gt;,'',server_quux}<br/>
+    MSG: {'$gen_call',{&lt;0.2.0&gt;,#Ref&lt;0.0.0.40&gt;},"hello"} &rarr;</p>
+  <p style="clear: both">&nbsp; <span style="float: right; text-align: right">send message to pid<br>
+      CTL: {2,'',&lt;0.2.0&gt;}<br/>
+      &larr; MSG: {#Ref&lt;0.0.0.40&gt;,"world"}</span></p>
+  <p style="clear: both">demonitor server process<br/>
+    CTL: {20,&lt;0.2.0&gt;,server_quux,#Ref&lt;0.0.0.40&gt;} &rarr;</p>
 </section>
 
 <section class="slide">
@@ -171,7 +195,7 @@ erl -noshell -pa ebin -name client_node@127.0.0.1 -s client
     <p>Anton Lebedevich</p>
     <p>mabrek@gmail.com</p>
     <p><a target="_blank" href="https://github.com/mabrek">github.com/mabrek</a></p>
-    <p><a href="http://mabrek.github.com/erlang-distribution-presentation-2013/">http://mabrek.github.com/erlang-distribution-presentation-2013/</a></p>
+    <p><a href="http://mabrek.github.com/erlang-distribution-presentation-2013/">mabrek.github.com/erlang-distribution-presentation-2013</a></p>
     <p><a href="http://github.com/erlang-distribution-presentation-2013/">Code, logs, traces</a></p>
 </section>
 
